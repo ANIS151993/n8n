@@ -1,0 +1,5 @@
+.env
+n8n_data/
+workflows_backup/*.json
+*.log
+node_modules/
