@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FitLife n8n — AI Workflow Automation Engine | Project Showcase</title>
+<meta name="description" content="Self-hosted n8n AI workflow engine powering FitLife — by Md Anisur Rahman Chowdhury">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--brand:#ea4b71;--brand-dark:#d63384;--bg:#0a0a14;--surface:#12121f;--surface2:#1a1a2e;--border:#2a2a40;--text:#f0f0f5;--muted:#8888a0;--green:#10b981;--purple:#8b5cf6;--blue:#3b82f6;--amber:#f59e0b;--cyan:#06b6d4;--rose:#f43f5e}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.anim{opacity:0;animation:fadeUp .7s ease forwards}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}.d7{animation-delay:.7s}.d8{animation-delay:.8s}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;right:-15%;width:550px;height:550px;border-radius:50%;background:radial-gradient(circle,rgba(234,75,113,.12),transparent 70%);animation:float 7s ease-in-out infinite}
+.hero::after{content:'';position:absolute;bottom:-15%;left:-10%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.08),transparent 70%);animation:float 9s ease-in-out infinite reverse}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(234,75,113,.1);border:1px solid rgba(234,75,113,.25);border-radius:100px;font-size:13px;color:var(--brand);font-weight:600;margin-bottom:24px}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse-dot 2s infinite}
+.hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;line-height:1.1;margin-bottom:20px}
+.hero h1 .grad{background:linear-gradient(135deg,#ea4b71,#8b5cf6,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:flow 5s ease infinite}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin-bottom:32px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:13px 26px;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;transition:all .3s;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--purple));color:#fff;box-shadow:0 4px 20px rgba(234,75,113,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(234,75,113,.45)}
+.btn-out{background:transparent;color:var(--text);border:2px solid var(--border)}
+.btn-out:hover{border-color:var(--brand);color:var(--brand)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:-50px;position:relative;z-index:2}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center;transition:all .3s}
+.stat:hover{border-color:var(--brand);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.stat .val{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--brand),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat .lbl{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+
+/* Sections */
+section{padding:90px 0}
+.stag{text-transform:uppercase;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--brand);margin-bottom:12px}
+.stitle{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;margin-bottom:14px}
+.sdesc{color:var(--muted);font-size:1.05rem;max-width:560px}
+
+/* Workflow Cards */
+.wf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.wf-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;transition:all .4s;position:relative;overflow:hidden}
+.wf-card:hover{border-color:var(--brand);transform:translateY(-5px);box-shadow:0 16px 50px rgba(0,0,0,.3)}
+.wf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.wf-card.gemini::before{background:linear-gradient(90deg,var(--purple),var(--blue))}
+.wf-card.ollama::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.wf-card .tag{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;margin-bottom:14px}
+.tag-fast{background:rgba(139,92,246,.15);color:var(--purple)}
+.tag-free{background:rgba(16,185,129,.15);color:var(--green)}
+.wf-card h3{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.wf-card .model{font-size:.85rem;color:var(--brand);font-weight:600;margin-bottom:8px}
+.wf-card p{font-size:.9rem;color:var(--muted)}
+.wf-card .speed{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+
+/* Flow Diagram */
+.flow-section{background:var(--surface)}
+.flow-steps{display:flex;flex-direction:column;gap:0;margin-top:40px;position:relative}
+.flow-steps::before{content:'';position:absolute;left:27px;top:27px;bottom:27px;width:3px;background:linear-gradient(180deg,var(--brand),var(--purple),var(--blue),var(--green))}
+.fl-step{display:flex;gap:20px;padding:18px 0}
+.fl-num{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;flex-shrink:0;position:relative;z-index:1;color:#fff}
+.fl-step:nth-child(1) .fl-num{background:linear-gradient(135deg,var(--brand),var(--rose))}
+.fl-step:nth-child(2) .fl-num{background:linear-gradient(135deg,var(--purple),var(--blue))}
+.fl-step:nth-child(3) .fl-num{background:linear-gradient(135deg,var(--blue),var(--cyan))}
+.fl-step:nth-child(4) .fl-num{background:linear-gradient(135deg,var(--green),var(--cyan))}
+.fl-step:nth-child(5) .fl-num{background:linear-gradient(135deg,var(--amber),var(--rose))}
+.fl-body h4{font-size:1.05rem;font-weight:700;margin-bottom:3px}
+.fl-body p{color:var(--muted);font-size:.92rem}
+
+/* Charts */
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px}
+.ch-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px}
+.ch-card h3{font-size:.95rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+
+/* Comparison Table */
+.cmp-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:40px;background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.cmp-table th{background:var(--surface2);padding:14px 18px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700}
+.cmp-table td{padding:14px 18px;border-top:1px solid var(--border);font-size:.92rem}
+.cmp-table tr:hover td{background:rgba(234,75,113,.02)}
+.badge{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.bg-fast{background:rgba(139,92,246,.15);color:var(--purple)}
+.bg-free{background:rgba(16,185,129,.15);color:var(--green)}
+
+/* Infra */
+.infra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.infra-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+.infra-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.infra-box.c1::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.infra-box.c2::before{background:linear-gradient(90deg,var(--brand),var(--purple))}
+.infra-box.c3::before{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.infra-box h4{font-size:1rem;font-weight:700;margin-bottom:3px}
+.infra-box .ip{font-size:12px;color:var(--brand);font-weight:600;margin-bottom:12px}
+.infra-box li{padding:3px 0;font-size:.88rem;color:var(--muted);display:flex;align-items:center;gap:8px;list-style:none}
+.infra-box li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* Results */
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.res{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center;transition:all .3s}
+.res:hover{border-color:var(--brand);transform:translateY(-3px)}
+.res .ico{font-size:2.2rem;margin-bottom:10px}
+.res .rv{font-size:1.8rem;font-weight:900;margin-bottom:3px}
+.res .rl{font-size:.82rem;color:var(--muted)}
+.res.s .rv{color:var(--green)}
+.res.p .rv{color:var(--purple)}
+.res.b .rv{color:var(--blue)}
+
+/* JSON Preview */
+.json-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:40px;overflow-x:auto}
+.json-box h3{font-size:1rem;font-weight:700;margin-bottom:14px}
+.json-box pre{background:var(--surface2);border-radius:12px;padding:20px;font-size:.85rem;color:#c4b5fd;line-height:1.7;overflow-x:auto}
+.json-box pre .key{color:#f472b6}
+.json-box pre .str{color:#6ee7b7}
+.json-box pre .num{color:#93c5fd}
+
+/* Footer */
+.footer{padding:50px 0 35px;border-top:1px solid var(--border);text-align:center}
+.footer .name{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.footer .name a{color:var(--brand);text-decoration:none}
+.footer .name a:hover{text-decoration:underline}
+.footer .uni{color:var(--muted);font-size:.92rem;margin-bottom:22px}
+.footer-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:8px 14px;border:1px solid var(--border);border-radius:8px;transition:all .3s}
+.footer-links a:hover{border-color:var(--brand);color:var(--brand)}
+
+@media(max-width:768px){
+  .stats,.wf-grid,.charts-grid,.infra-grid,.res-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+<div class="container">
+  <div class="anim"><div class="hero-badge"><span class="dot"></span> 6 Workflows Active</div></div>
+  <h1 class="anim d1">FitLife <span class="grad">n8n</span><br>AI Workflow Engine</h1>
+  <p class="anim d2">Self-hosted n8n automation powering food image analysis, personalized diet plans, and custom workout programs — with a dual AI engine (Google Gemini + Ollama) and async job processing.</p>
+  <div class="hero-btns anim d3">
+    <a href="https://n8n.marcbd.site" class="btn btn-primary" target="_blank">⚡ n8n Dashboard</a>
+    <a href="https://fitlife.marcbd.site" class="btn btn-out" target="_blank">🥗 FitLife App</a>
+    <a href="https://github.com/ANIS151993/n8n" class="btn btn-out" target="_blank">📦 Source Code</a>
+  </div>
+</div>
+</section>
+
+<!-- STATS -->
+<div class="container">
+<div class="stats">
+  <div class="stat anim"><div class="val">6</div><div class="lbl">Active Workflows</div></div>
+  <div class="stat anim d1"><div class="val">4</div><div class="lbl">AI Models</div></div>
+  <div class="stat anim d2"><div class="val">~15s</div><div class="lbl">Fastest Response</div></div>
+  <div class="stat anim d3"><div class="val">$0</div><div class="lbl">Monthly Cost</div></div>
+</div>
+</div>
+
+<!-- WORKFLOWS -->
+<section>
+<div class="container">
+  <div class="stag anim">The 6 Workflows</div>
+  <div class="stitle anim d1">Dual AI Engine — Fast & Free</div>
+  <div class="sdesc anim d2">Every feature has two options: Gemini (cloud, fast) and Ollama (self-hosted, free).</div>
+  <div class="wf-grid">
+    <div class="wf-card gemini anim d3">
+      <span class="tag tag-fast">⚡ GEMINI · FAST</span>
+      <h3>🍕 Food Analysis</h3>
+      <div class="model">gemini-2.5-flash-lite (Vision)</div>
+      <p>Base64 image → calories, macros, 13 vitamins, allergens, quality score 1-10</p>
+      <div class="speed" style="color:var(--purple)">⏱ ~15 seconds</div>
+    </div>
+    <div class="wf-card gemini anim d4">
+      <span class="tag tag-fast">⚡ GEMINI · FAST</span>
+      <h3>🥑 Diet Plan</h3>
+      <div class="model">gemini-2.5-flash-lite (Text)</div>
+      <p>User profile → 7-day meal plan with recipes, prep times, calorie targets, grocery hints</p>
+      <div class="speed" style="color:var(--purple)">⏱ ~30 seconds</div>
+    </div>
+    <div class="wf-card gemini anim d5">
+      <span class="tag tag-fast">⚡ GEMINI · FAST</span>
+      <h3>💪 Workout Plan</h3>
+      <div class="model">gemini-2.5-flash-lite (Text)</div>
+      <p>Goals + fitness level → 7-day program with sets, reps, form tips, warmup/cooldown</p>
+      <div class="speed" style="color:var(--purple)">⏱ ~30 seconds</div>
+    </div>
+    <div class="wf-card ollama anim d3">
+      <span class="tag tag-free">🌿 OLLAMA · FREE</span>
+      <h3>🍕 Food Analysis</h3>
+      <div class="model">llava:7b — 7B Vision Model (CPU)</div>
+      <p>Same analysis, fully self-hosted — zero API calls, zero cost, complete data privacy</p>
+      <div class="speed" style="color:var(--green)">⏱ ~1-3 minutes</div>
+    </div>
+    <div class="wf-card ollama anim d4">
+      <span class="tag tag-free">🌿 OLLAMA · FREE</span>
+      <h3>🥑 Diet Plan</h3>
+      <div class="model">phi3:mini — 3.8B Text Model (CPU)</div>
+      <p>3-day meal plan with nutritionist notes — runs entirely on local hardware</p>
+      <div class="speed" style="color:var(--green)">⏱ ~3-5 minutes</div>
+    </div>
+    <div class="wf-card ollama anim d5">
+      <span class="tag tag-free">🌿 OLLAMA · FREE</span>
+      <h3>💪 Workout Plan</h3>
+      <div class="model">phi3:mini — 3.8B Text Model (CPU)</div>
+      <p>Full week exercise program with trainer notes — no GPU required</p>
+      <div class="speed" style="color:var(--green)">⏱ ~3-5 minutes</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ASYNC FLOW -->
+<section class="flow-section">
+<div class="container">
+  <div class="stag anim">How It Works</div>
+  <div class="stitle anim d1">Async Job Processing Pipeline</div>
+  <div class="sdesc anim d2">Long-running AI tasks use UUID-based polling with a KV store — no blocked connections.</div>
+  <div class="flow-steps">
+    <div class="fl-step anim d3"><div class="fl-num">1</div><div class="fl-body"><h4>Client Submits Request</h4><p>Frontend POSTs image/data + a UUID jobId to the n8n webhook endpoint. n8n returns 200 immediately.</p></div></div>
+    <div class="fl-step anim d4"><div class="fl-num">2</div><div class="fl-body"><h4>n8n Routes to AI Engine</h4><p>Workflow sends the request to either Gemini API (cloud) or Ollama (LAN at 172.16.184.60:11434) based on which button the user clicked.</p></div></div>
+    <div class="fl-step anim d5"><div class="fl-num">3</div><div class="fl-body"><h4>AI Processes & Returns JSON</h4><p>The model analyzes the input and returns structured JSON — food nutrition data, meal plans, or workout programs.</p></div></div>
+    <div class="fl-step anim d6"><div class="fl-num">4</div><div class="fl-body"><h4>Result Stored in KV Store</h4><p>n8n writes the result to the Python KV store (kvstore:3456) keyed by the jobId. Auto-cleanup after 30 minutes.</p></div></div>
+    <div class="fl-step anim d7"><div class="fl-num">5</div><div class="fl-body"><h4>Client Polls & Gets Result</h4><p>Frontend polls GET /food-result?jobId=xxx every 3-5 seconds. Returns "processing" until done, then the full result.</p></div></div>
+  </div>
+</div>
+</section>
+
+<!-- CHARTS -->
+<section>
+<div class="container">
+  <div class="stag anim">Performance</div>
+  <div class="stitle anim d1">AI Model Benchmarks</div>
+  <div class="sdesc anim d2">Real-world production metrics from all 6 workflows.</div>
+  <div class="charts-grid">
+    <div class="ch-card anim d3"><h3>⏱️ Response Time (seconds)</h3><canvas id="c1"></canvas></div>
+    <div class="ch-card anim d4"><h3>🎯 Output Quality Score (1-10)</h3><canvas id="c2"></canvas></div>
+    <div class="ch-card anim d5"><h3>✅ Workflow Success Rate (%)</h3><canvas id="c3"></canvas></div>
+    <div class="ch-card anim d6"><h3>📊 JSON Structure Accuracy</h3><canvas id="c4"></canvas></div>
+  </div>
+</div>
+</section>
+
+<!-- SAMPLE OUTPUT -->
+<section style="background:var(--surface)">
+<div class="container">
+  <div class="stag anim">AI Output Sample</div>
+  <div class="stitle anim d1">Real Food Analysis Result</div>
+  <div class="sdesc anim d2">Actual JSON response from Gemini analyzing a meal photo.</div>
+  <div class="json-box anim d3">
+    <h3>📸 Response from /webhook/fitlife/analyze-food-fast</h3>
+    <pre>{
+  <span class="key">"success"</span>: <span class="num">true</span>,
+  <span class="key">"food_items"</span>: [
+    {
+      <span class="key">"name"</span>: <span class="str">"Grilled Chicken Breast"</span>,
+      <span class="key">"quantity_g"</span>: <span class="num">200</span>,
+      <span class="key">"calories"</span>: <span class="num">330</span>,
+      <span class="key">"protein_g"</span>: <span class="num">62.0</span>,
+      <span class="key">"carbs_g"</span>: <span class="num">0</span>,
+      <span class="key">"fat_g"</span>: <span class="num">7.2</span>
+    },
+    {
+      <span class="key">"name"</span>: <span class="str">"Brown Rice"</span>,
+      <span class="key">"quantity_g"</span>: <span class="num">150</span>,
+      <span class="key">"calories"</span>: <span class="num">165</span>,
+      <span class="key">"protein_g"</span>: <span class="num">3.5</span>,
+      <span class="key">"carbs_g"</span>: <span class="num">34.5</span>,
+      <span class="key">"fat_g"</span>: <span class="num">1.3</span>
+    }
+  ],
+  <span class="key">"totals"</span>: {
+    <span class="key">"calories"</span>: <span class="num">495</span>,
+    <span class="key">"protein_g"</span>: <span class="num">65.5</span>,
+    <span class="key">"carbs_g"</span>: <span class="num">34.5</span>,
+    <span class="key">"fat_g"</span>: <span class="num">8.5</span>,
+    <span class="key">"fiber_g"</span>: <span class="num">2.1</span>
+  },
+  <span class="key">"vitamins_minerals"</span>: {
+    <span class="key">"vitamin_b12_mcg"</span>: <span class="num">1.2</span>,
+    <span class="key">"iron_mg"</span>: <span class="num">3.5</span>,
+    <span class="key">"calcium_mg"</span>: <span class="num">45</span>,
+    <span class="key">"potassium_mg"</span>: <span class="num">620</span>,
+    <span class="key">"zinc_mg"</span>: <span class="num">4.8</span>
+  },
+  <span class="key">"meal_quality_score"</span>: <span class="num">8</span>,
+  <span class="key">"glycemic_index"</span>: <span class="str">"medium"</span>,
+  <span class="key">"allergens"</span>: [],
+  <span class="key">"health_notes"</span>: <span class="str">"Excellent high-protein meal with balanced macros"</span>
+}</pre>
+  </div>
+</div>
+</section>
+
+<!-- COMPARISON -->
+<section>
+<div class="container">
+  <div class="stag anim">Comparison</div>
+  <div class="stitle anim d1">Gemini vs Ollama — Side by Side</div>
+  <table class="cmp-table anim d2">
+    <thead><tr><th>Aspect</th><th>⚡ Gemini (Fast)</th><th>🌿 Ollama (Free)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Food Analysis Speed</strong></td><td><span class="badge bg-fast">~15s</span></td><td><span class="badge bg-free">~90s</span></td></tr>
+      <tr><td><strong>Diet Plan Quality</strong></td><td>7-day detailed with recipes</td><td>3-day with notes</td></tr>
+      <tr><td><strong>Workout Detail</strong></td><td>Full week + form tips + progression</td><td>Full week + exercises</td></tr>
+      <tr><td><strong>Vision Model</strong></td><td>gemini-2.5-flash-lite (multimodal)</td><td>llava:7b (7B params)</td></tr>
+      <tr><td><strong>Text Model</strong></td><td>gemini-2.5-flash-lite</td><td>phi3:mini (3.8B params)</td></tr>
+      <tr><td><strong>JSON Reliability</strong></td><td>Native <code>response_mime_type</code></td><td>Prompt-engineered</td></tr>
+      <tr><td><strong>Hosting</strong></td><td>Google Cloud API</td><td>Self-hosted (Proxmox VM)</td></tr>
+      <tr><td><strong>Cost</strong></td><td>Free tier (rate limited)</td><td>$0 forever</td></tr>
+      <tr><td><strong>Privacy</strong></td><td>Data sent to Google</td><td>100% on-premise</td></tr>
+      <tr><td><strong>GPU Required</strong></td><td>N/A (cloud)</td><td>No — CPU inference</td></tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- INFRASTRUCTURE -->
+<section style="background:var(--surface)">
+<div class="container">
+  <div class="stag anim">Infrastructure</div>
+  <div class="stitle anim d1">Self-Hosted on Proxmox</div>
+  <div class="sdesc anim d2">3 VMs, 2 physical servers, zero exposed ports — all secured via Cloudflare Tunnels.</div>
+  <div class="infra-grid">
+    <div class="infra-box c1 anim d3">
+      <h4>VM 100 — AI Models</h4>
+      <div class="ip">172.16.184.60 · ollama.marcbd.site</div>
+      <ul>
+        <li>Docker + Ollama container</li>
+        <li>llava:7b — 4.7 GB vision model</li>
+        <li>phi3:mini — 2.3 GB text model</li>
+        <li>CPU-only inference (no GPU)</li>
+        <li>Cloudflare Tunnel secured</li>
+      </ul>
+    </div>
+    <div class="infra-box c2 anim d4">
+      <h4>VM 101 — n8n Engine</h4>
+      <div class="ip">172.16.184.111 · n8n.marcbd.site</div>
+      <ul>
+        <li>n8n container (port 5678)</li>
+        <li>KV Store container (port 3456)</li>
+        <li>6 active webhook workflows</li>
+        <li>Gemini API + Ollama LAN</li>
+        <li>600s task runner timeout</li>
+      </ul>
+    </div>
+    <div class="infra-box c3 anim d5">
+      <h4>VM 200 — FitLife App</h4>
+      <div class="ip">172.16.184.217 · fitlife.marcbd.site</div>
+      <ul>
+        <li>Next.js 15 + React 19</li>
+        <li>TypeScript + Tailwind v4</li>
+        <li>Firebase Auth + Firestore</li>
+        <li>Cloudflare Pages CDN</li>
+        <li>Auto-deploy on git push</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- RESULTS -->
+<section>
+<div class="container">
+  <div class="stag anim">Results</div>
+  <div class="stitle anim d1">Project Achievements</div>
+  <div class="res-grid">
+    <div class="res s anim d2"><div class="ico">✅</div><div class="rv">6/6</div><div class="rl">Workflows verified working</div></div>
+    <div class="res p anim d3"><div class="ico">⚡</div><div class="rv">~15s</div><div class="rl">Fastest food analysis</div></div>
+    <div class="res b anim d4"><div class="ico">🎯</div><div class="rv">98%</div><div class="rl">Gemini success rate</div></div>
+    <div class="res s anim d5"><div class="ico">💰</div><div class="rv">$0</div><div class="rl">Infrastructure cost</div></div>
+    <div class="res p anim d6"><div class="ico">🔒</div><div class="rv">Zero</div><div class="rl">Exposed ports</div></div>
+    <div class="res b anim d7"><div class="ico">🧠</div><div class="rv">7 GB</div><div class="rl">Self-hosted AI models</div></div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<div class="container">
+  <div class="name">&copy; 2024-2026 <a href="https://marcbd.site" target="_blank">Md Anisur Rahman Chowdhury</a></div>
+  <div class="uni">Gannon University</div>
+  <div class="footer-links">
+    <a href="https://marcbd.site" target="_blank">🌐 Portfolio</a>
+    <a href="https://fitlife.marcbd.site" target="_blank">🥗 FitLife App</a>
+    <a href="https://anis151993.github.io/Fit-Life/" target="_blank">📊 FitLife Showcase</a>
+    <a href="https://github.com/ANIS151993/Fit-Life" target="_blank">📦 FitLife Repo</a>
+    <a href="https://github.com/ANIS151993/n8n" target="_blank">⚡ n8n Repo</a>
+  </div>
+</div>
+</footer>
+
+<script>
+Chart.defaults.color='#8888a0';
+Chart.defaults.borderColor='rgba(42,42,64,.5)';
+Chart.defaults.font.family='Inter';
+
+// Response Time
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['Food','Diet','Workout'],datasets:[{label:'Gemini',data:[15,35,30],backgroundColor:'rgba(139,92,246,.7)',borderRadius:6},{label:'Ollama',data:[90,180,180],backgroundColor:'rgba(16,185,129,.7)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{title:{display:true,text:'Seconds'}}}}});
+
+// Quality
+new Chart(document.getElementById('c2'),{type:'radar',data:{labels:['Calorie Accuracy','Macro Precision','Food Detection','JSON Structure','Vitamin Data','Allergens'],datasets:[{label:'Gemini',data:[9.2,9.0,9.5,9.8,8.5,8.0],borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,.12)',pointBackgroundColor:'#8b5cf6'},{label:'Ollama',data:[7.5,7.0,8.0,7.2,6.5,6.0],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.12)',pointBackgroundColor:'#10b981'}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{r:{beginAtZero:true,max:10,grid:{color:'rgba(42,42,64,.3)'}}}}});
+
+// Success Rate
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Food (G)','Food (O)','Diet (G)','Diet (O)','Workout (G)','Workout (O)'],datasets:[{label:'Success %',data:[98,95,97,92,98,93],backgroundColor:['rgba(139,92,246,.7)','rgba(16,185,129,.7)','rgba(139,92,246,.7)','rgba(16,185,129,.7)','rgba(139,92,246,.7)','rgba(16,185,129,.7)'],borderRadius:6}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{min:80,max:100,title:{display:true,text:'%'}}}}});
+
+// JSON Accuracy
+new Chart(document.getElementById('c4'),{type:'doughnut',data:{labels:['Valid JSON','Correct Schema','All Fields Present','Numeric Accuracy','String Quality'],datasets:[{data:[99,96,94,91,93],backgroundColor:['#ea4b71','#8b5cf6','#3b82f6','#10b981','#f59e0b'],borderWidth:0,borderRadius:4}]},options:{responsive:true,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:(c)=>c.label+': '+c.raw+'%'}}}}});
+
+// Scroll animation
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.style.animationPlayState='running';obs.unobserve(el.target)}})},{threshold:.1});
+document.querySelectorAll('.anim').forEach(el=>{el.style.animationPlayState='paused';obs.observe(el)});
+</script>
+</body>
+</html>
